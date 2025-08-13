@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='nav.css') }}">
+<style>
+    #success-stories {
+        margin-top: 20px; /* you can adjust this value */
+    }
+</style>
+
+<section id="success-stories" class="container my-5">
+    <h2 class="text-center mb-4">Success Stories</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container mt-4">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        {% for story in stories %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if story.photo %}
+                <img src="{{ url_for('static', filename='uploads/' + story.photo) }}" class="card-img-top" alt="Success Story Photo">
+                {% else %}
+                <img src="{{ url_for('static', filename='default.jpg') }}" class="card-img-top" alt="Default Image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ story.title }}</h5>
+                    <p class="card-text">{{ story.story }}</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center">No success stories yet. Be the first to add one!</p>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('addsts') }}" class="btn btn-primary">Share Your Success Story</a>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock body %}
